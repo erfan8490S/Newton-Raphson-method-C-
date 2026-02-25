@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cmath> // برای توابع ریاضی مثل sqrt
+
+// تابع f(x) = x^2 - 2
+double f(double x) {
+    return x * x - 2;
+}
+
+// مشتق تابع f(x): f'(x) = 2x
+double f_prime(double x) {
+    return 2 * x;
+}
+
+// تابع نیوتن-رافسون برای پیدا کردن ریشه معادله
+double newtonRaphson(double initialGuess, double tolerance = 1e-6, int maxIterations = 1000) {
+    double x = initialGuess;
+    int iteration = 0;
+    
+    while (iteration < maxIterations) {
+        double fx = f(x);
+        double fx_prime = f_prime(x);
+        
+        // بررسی اینکه مشتق صفر نباشد
+        if (fx_prime == 0) {
+            std::cerr << "مشتق صفر است! روش متوقف می‌شود.\n";
+            return NAN;
+        }
+
+        // محاسبه مقدار بعدی با فرمول نیوتن-رافسون
+        double nextX = x - fx / fx_prime;
+
+        // اگر تغییرات به اندازه کافی کوچک بود، متوقف می‌کنیم
+        if (std::abs(nextX - x) < tolerance) {
+            return nextX;
+        }
+
+        x = nextX;
+        iteration++;
+    }
+
+    std::cerr << "تعداد تکرارها به حد ماکزیمم رسید. ریشه پیدا نشد.\n";
+    return NAN;
+}
+
+int main() {
+    double initialGuess;
+    std::cout << "لطفاً تخمین اولیه را وارد کنید: ";
+    std::cin >> initialGuess;
+    
+    double root = newtonRaphson(initialGuess);
+    
+    if (!std::isnan(root)) {
+        std::cout << "ریشه معادله تقریباً برابر است با: " << root << std::endl;
+    }
+    
+    return 0;
+}
